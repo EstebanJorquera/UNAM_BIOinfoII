@@ -2,6 +2,7 @@
 title: "homework_02"
 author: "Esteban Jorquera; Marlon Aldair; Diego Ramírez"
 date: "`r Sys.Date()`"
+always_allow_html: true
 output:
   pdf_document: default
   html_document: default
@@ -10,12 +11,14 @@ output:
 
 ```{r setup, include=FALSE}
 library(knitr)
+library(kableExtra)
 knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
 # Practical: Alignment
 
-```{code}
+```{eval=FALSE}
 
 # copies all files from its parent directory to a local work directory
 cp /mnt/Timina/bioinfoII/data/alignment/* /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_2
@@ -39,7 +42,7 @@ module load samtools/1.9
 
 # E.Coli FNR ChIP-seq alignment
 
-```{code}
+```{eval=FALSE}
 
 # indexes the Escherichia_coli_K12_MG1655.fasta file using bwa
 bwa index /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_2/Escherichia_coli_K12_MG1655.fasta
@@ -63,14 +66,21 @@ samtools view -H /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_2/output/EColi_
 
 ## Analysis
 
-
 #### fastqc FNR ChIP-seq results:
 
+ 
+
 ```{r echo=FALSE}
+FNR_table <- matrix(c('SRX189773 _FNR_ChIP .fastq','Conventional base calls','Sanger / Illumina 1.9','3603544','0','36','49'), ncol=7, byrow=TRUE)
+colnames(FNR_table) <- c('Filename','File type','Encoding','Total Sequences','Sequences flagged as poor quality','Sequence length','%GC')
+FNR_DF <- as.data.frame(FNR_table)
+kable(FNR_DF,align = "c", format = "latex", booktabs = TRUE) %>%
+  kable_styling(full_width = TRUE)
 FNR_table <- matrix(c('SRX189773_FNR_ChIP.fastq','Conventional base calls','Sanger / Illumina 1.9','3603544','0','36','49'), ncol=7, byrow=TRUE)
 colnames(FNR_table) <- c('Filename','File type','Encoding','Total Sequences','Sequences flagged as poor quality','Sequence length','%GC')
 FNR_DF <- as.data.frame(FNR_table)
-kable(FNR_DF,align = "c")
+#kable(FNR_DF,align = "c", format = "html", booktabs = TRUE) %>%
+#  kable_styling(full_width = TRUE)
 ```
 According to fastqc results the FNR ChIP-seq basic statistics are correct 
 
@@ -111,6 +121,15 @@ knitr::include_graphics('./homework_02/FNR/duplication_levels.png')
 Regarding sequence duplication events we see that there are sequences that suffered extreme duplication events having more than 5000 duplication events, which likely correspond to the "GATCGGAAGAGCACACGTCTGAACTCCAGTCACACA" sequence and its variations
 
 ```{r echo=FALSE}
+FNR_seq_r1 <- c('GATCGGAAGAGC-ACACGTCTGAAC-TCCAGTCACACA','1060621','29.432719567181643','TruSeq Adapter, Index 5 (100% over 36bp)')
+FNR_seq_r2 <- c('GCTAACAAATAC-CCGACTAAATCA-GTCAAGTAAATA','13630','0.37823875606902535','No Hit')
+FNR_seq_r3 <- c('NATCGGAAGAGC-ACACGTCTGAAC-TCCAGTCACACA','11728','0.3254573830651159','TruSeq Adapter, Index 5 (97% over 36bp)')
+FNR_seq_r4 <- c('GTTAGCTATTTA-CTTGACTGATTT-AGTCGGGTATTT','10983','0.304783291115635','No Hit')
+FNR_seq_r5 <- c('GATCGGAAGAGC-ACACGTCTGAAC-TCCAGTCACACC','3658','0.10151117899490057','TruSeq Adapter, Index 1 (97% over 36bp)')
+FNR_sequences <- rbind(FNR_seq_r1,FNR_seq_r2,FNR_seq_r3,FNR_seq_r4,FNR_seq_r5)
+colnames(FNR_sequences) <- c('Sequence','Count','Percentage','Possible Source')
+kable(FNR_sequences,align = "c", format = "latex", booktabs = TRUE) %>%
+  kable_styling(full_width = TRUE)
 FNR_seq_r1 <- c('GATCGGAAGAGCACACGTCTGAACTCCAGTCACACA','1060621','29.432719567181643','TruSeq Adapter, Index 5 (100% over 36bp)')
 FNR_seq_r2 <- c('GCTAACAAATACCCGACTAAATCAGTCAAGTAAATA','13630','0.37823875606902535','No Hit')
 FNR_seq_r3 <- c('NATCGGAAGAGCACACGTCTGAACTCCAGTCACACA','11728','0.3254573830651159','TruSeq Adapter, Index 5 (97% over 36bp)')
@@ -118,7 +137,8 @@ FNR_seq_r4 <- c('GTTAGCTATTTACTTGACTGATTTAGTCGGGTATTT','10983','0.30478329111563
 FNR_seq_r5 <- c('GATCGGAAGAGCACACGTCTGAACTCCAGTCACACC','3658','0.10151117899490057','TruSeq Adapter, Index 1 (97% over 36bp)')
 FNR_sequences <- rbind(FNR_seq_r1,FNR_seq_r2,FNR_seq_r3,FNR_seq_r4,FNR_seq_r5)
 colnames(FNR_sequences) <- c('Sequence','Count','Percentage','Possible Source')
-kable(FNR_sequences,align = "c")
+#kable(FNR_sequences,align = "c", format = "html", booktabs = TRUE) %>%
+#  kable_styling(full_width = TRUE)
 ```
 
 When we analyze the overrepresented sequences, we can confirm that they correspond to adapters, specifically Illumina TruSeq adapters.
@@ -140,7 +160,7 @@ mm10 reference genome: /mnt/Archives/genome/mouse/mm10/UCSC/bwa-0.7.15-index/ind
 
 mm10 index files: /mnt/Archives/genome/mouse/mm10/UCSC/bwa-0.7.15-index/index/mm10.fa.amb /mnt/Archives/genome/mouse/mm10/UCSC/bwa-0.7.15-index/index/mm10.fa.ann /mnt/Archives/genome/mouse/mm10/UCSC/bwa-0.7.15-index/index/mm10.fa.bwt /mnt/Archives/genome/mouse/mm10/UCSC/bwa-0.7.15-index/index/mm10.fa.pac /mnt/Archives/genome/mouse/mm10/UCSC/bwa-0.7.15-index/index/mm10.fa.sa
 
-```{code}
+```{eval=FALSE}
 
 # executes fastqc for the compressed M.Musculus CEBPA (CCAAT/enhancer-binding protein alpha) transcription factor Chip-seq data file (mus_musculus_CEBPA_liver_ERR005132.fastq.gz)
 fastqc /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_2/mus_musculus_CEBPA_liver_ERR005132.fastq.gz -o output
@@ -155,7 +175,9 @@ scp ejorquera@dna.lavis.unam.mx:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_
 
 Considering the file sizes of both the mus musculus reference genome and the CEBPA ChIP-seq data, the memory available to qlogin sessions might not be enough, and would likely cause the process to hang indefinitely. Therefore a sge script was generated.
 
-```{code MMusculus.sge}
+```{eval=FALSE}
+MMusculus.sge 
+
 #!/bin/bash
 # Use current working directory
 #$ -cwd
@@ -182,7 +204,7 @@ Considering the file sizes of both the mus musculus reference genome and the CEB
 (module load bwa/0.7.15 ; bwa mem -M -t 8 /mnt/Archives/genome/mouse/mm10/UCSC/bwa-0.7.15-index/index/mm10.fa /mnt/Timina/bioinfoII/data/alignment/mus_musculus_CEBPA_liver_ERR005132.fastq.gz > /mnt/Timina/bioinfoII/marciniega/tarea_02/MMusculus_FNR_ChIP.sam)
 ```
 
-```{code}
+```{eval=FALSE}
 # runs the sge script to generate the CEBPA ChIP-seq data alignment in sam file format
 qsub MMusculus.sge
 
@@ -198,11 +220,20 @@ nano  MMusculus_FNR_ChIP.stats
 
 #### fastqc CEBPA ChIP-seq results:
 
+ 
+
+
 ```{r echo=FALSE}
+CEBPA_table <- matrix(c('mus_musculus _CEBPA_liver _ERR005132. fastq.gz','Conventional base calls','Sanger / Illumina 1.9','17171130','0','42','45'), ncol=7, byrow=TRUE)
+colnames(CEBPA_table) <- c('Filename','File type','Encoding','Total Sequences','Sequences flagged as poor quality','Sequence length','%GC')
+CEBPA_DF <- as.data.frame(CEBPA_table)
+kable(CEBPA_DF,align = "c", format = "latex", booktabs = TRUE) %>%
+  kable_styling(full_width = TRUE)
 CEBPA_table <- matrix(c('mus_musculus_CEBPA_liver_ERR005132.fastq.gz','Conventional base calls','Sanger / Illumina 1.9','17171130','0','42','45'), ncol=7, byrow=TRUE)
 colnames(CEBPA_table) <- c('Filename','File type','Encoding','Total Sequences','Sequences flagged as poor quality','Sequence length','%GC')
 CEBPA_DF <- as.data.frame(CEBPA_table)
-kable(CEBPA_DF,align = "c")
+#kable(CEBPA_DF,align = "c", format = "html", booktabs = TRUE) %>%
+#  kable_styling(full_width = TRUE)
 ```
 
 ```{r echo=FALSE, fig.align='center', out.width='100%'}

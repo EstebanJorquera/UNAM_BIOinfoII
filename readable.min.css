@@ -10,7 +10,9 @@
   font-weight: 700;
   src: url(fonts/RalewayBold.ttf) format('truetype');
 }
-
+div.datatables {
+    height: auto !important;
+}
 /*!
  * bootswatch v3.3.6
  * Homepage: http://bootswatch.com
