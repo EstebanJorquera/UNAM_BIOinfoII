@@ -228,5 +228,4 @@ The error in this graph is not due to the presence of adapters in the illumina s
 ```{r echo=FALSE, fig.align='center', out.width='100%'}
 knitr::include_graphics('./homework_02/CEBPA/kmer_profiles.png')
 ```
-
-This suggests that flowcells are generating problems in the sequencing, contributing to the low quality sequence and mapped quality obtained from the sam file using samtools stats which is Q0 (multi-mapped reads).
+This suggests that there was an error during the sequencing, as can be seen in the flowcells, which contributed to the overall low sequence quality, and mapping quality obtained from the sam file using samtools stats which is Q0 (multi-mapped reads).
