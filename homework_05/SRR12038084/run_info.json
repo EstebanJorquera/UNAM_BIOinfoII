@@ -1,0 +1,13 @@
+{
+	"n_targets": 142376,
+	"n_bootstraps": 0,
+	"n_processed": 3936194,
+	"n_pseudoaligned": 575149,
+	"n_unique": 146539,
+	"p_pseudoaligned": 14.6,
+	"p_unique": 3.7,
+	"kallisto_version": "0.45.0",
+	"index_version": 10,
+	"start_time": "Wed Mar  2 14:53:31 2022",
+	"call": "kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/SRR12038084 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038084_trmd_1_1P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038084_trmd_1_1U.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038084_trmd_1_2P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038084_trmd_1_2U.fastq.gz"
+}

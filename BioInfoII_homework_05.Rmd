@@ -1,0 +1,134 @@
+---
+title: "homework_05"
+author: "Esteban Jorquera; Marlon Aldair; Diego Ramírez"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+  css: readable.min.css
+---
+
+Github link:
+https://github.com/EstebanJorquera/UNAM_BIOinfoII.git
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r results = TRUE, message=FALSE, warning=FALSE, echo=TRUE, Packages_Dependencies}
+# Note installing packages through knitter is not the best idea,
+# the following code will likely fail if the package is not already installed, with a missing mirror error message
+# for this reason there's an included R script just for that
+# anyway this meant to be run on a cluster rather than locally, so happy copy pasting :)!
+# Installs required packages if not already installed (avoids re installing)
+if (!requireNamespace("BiocManager", quietly = TRUE))     install.packages("BiocManager")
+
+if (!requireNamespace("tidyverse", quietly = TRUE))       install.packages("tidyverse")
+if (!requireNamespace("dplyr", quietly = TRUE))           install.packages("dplyr")
+if (!requireNamespace("tidyr", quietly = TRUE))           install.packages("tidyr")
+if (!requireNamespace("ggplot2", quietly = TRUE))         install.packages("ggplot2")
+if (!requireNamespace("wordcloud", quietly = TRUE))       install.packages("wordcloud")
+if (!requireNamespace("RColorBrewer", quietly = TRUE))    install.packages("RColorBrewer")
+
+# Libraries
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(wordcloud)
+library(RColorBrewer)
+
+BiocManager::install(version = "3.13")
+packages = c("DESeq2", "tximport")
+BiocManager::install(packages)
+```
+
+```{code results = FALSE, message=FALSE, warning=FALSE, echo=TRUE, kallisto_index.sge}
+#!/bin/bash
+# Use current working directory
+#$ -cwd
+#
+# Join stdout and stderr
+#$ -j y
+#
+# Run job through bash shell
+#$ -S /bin/bash
+#
+# You can edit the script since this line
+#
+# Your job name
+#$ -N Esteban_kallisto_index
+
+# Send an email after the job has finished
+#$ -m e
+#$ -M eijorquera@uc.cl
+#
+# Line required if modules are to be used, source modules environment
+. /etc/profile.d/modules.sh
+#
+# Loads deeptools module,
+# executes bamCoverage for bam to bw conversion of the mus musculus ChIP-seq alignment data
+(module load kallisto/0.45.0 ; 
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M28/gencode.vM28.transcripts.fa.gz ; 
+kallisto index -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/gencode.vM28.transcripts.fa.gz ; 
+mkdir /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/*)
+```
+
+```{code results = FALSE, message=FALSE, warning=FALSE, echo=TRUE, kallisto_quant.sge}
+#!/bin/bash
+# Use current working directory
+#$ -cwd
+#
+# Join stdout and stderr
+#$ -j y
+#
+# Run job through bash shell
+#$ -S /bin/bash
+#
+# You can edit the script since this line
+#
+# Your job name
+#$ -N Esteban_kallisto_quant
+
+# Send an email after the job has finished
+#$ -m e
+#$ -M eijorquera@uc.cl
+#
+# Line required if modules are to be used, source modules environment
+. /etc/profile.d/modules.sh
+#
+# Loads deeptools module,
+# executes bamCoverage for bam to bw conversion of the mus musculus ChIP-seq alignment data
+(module load kallisto/0.45.0 ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/SRR12038081 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038081* ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/SRR12038082 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038082* ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/SRR12038083 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038083* ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/SRR12038084 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038084* ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/SRR12038085 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038085* ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallisto45_gencode-m28 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/SRR12038086 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/trimmed/SRR12038086*)
+```
+
+
+```{r eval = FALSE, results = FALSE, message=FALSE, warning=FALSE, echo=TRUE,}
+getwd()
+setwd("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/output")
+
+files <- file.path("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/output",list.dirs(dir(".")),"abundance.h5") # abundance files paths
+names(files) <- str_extract(files,"SRR\\d+") # so that tximport identifies them
+files
+	
+# Load table with trx id and gene id correspondence
+tx2gene <- read.csv("/mnt/Timina/bioinfoII/rnaseq/resources/gencode/gencode.vM28.basic.trx_id-gene_id-no_ver.tsv",stringsAsFactors = F)
+
+# Load table with trx id and gene name correspondence
+tx2genename <- read.csv("/mnt/Timina/bioinfoII/rnaseq/resources/gencode/gencode.vM28.basic.trx_id-gene_name-no_ver.tsv",stringsAsFactors = F)
+
+# Run tximport
+# tx2gene links transcript IDs to gene IDs for summarization
+txi.kallisto <- tximport(files, type = "kallisto", tx2gene = tx2gene, ignoreAfterBar=TRUE, ignoreTxVersion=TRUE)
+txi.kallisto.name <- tximport(files, type = "kallisto", tx2gene = tx2genename, ignoreAfterBar=TRUE, ignoreTxVersion=TRUE)
+
+names(txi.kallisto)
+head(txi.kallisto$counts)
+```
