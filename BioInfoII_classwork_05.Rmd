@@ -108,6 +108,9 @@ kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/index_kallis
 getwd()
 setwd("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/output")
 
+library(tximport)
+library(tidyverse) 
+
 files <- file.path("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/output",list.dirs(dir(".")),"abundance.h5") # abundance files paths
 names(files) <- str_extract(files,"SRR\\d+") # so that tximport identifies them
 files
