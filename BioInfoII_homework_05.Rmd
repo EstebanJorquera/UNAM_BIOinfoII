@@ -79,19 +79,289 @@ module load trimmomatic/0.33 ;
 module load multiqc/1.5 ; 
 fastqc /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/*.fastq.gz -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC1 ; 
 multiQC /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC1 ; 
-wget https://github.com/timflutre/trimmomatic/blob/master/adapters/TruSeq3-PE.fa ; 
 trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417885.sra_1.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417885_trmd_1.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
-trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417885.sra_2.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417885_trmd_2.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
 trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417886.sra_1.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417886_trmd_1.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
-trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417886.sra_2.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417886_trmd_2.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
 trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417887.sra_1.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417887_trmd_1.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
-trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417887.sra_2.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417887_trmd_2.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
 trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417888.sra_1.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417888_trmd_1.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
-trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417888.sra_2.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417888_trmd_2.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
 trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417889.sra_1.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417889_trmd_1.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
-trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417889.sra_2.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417889_trmd_2.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
 trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417890.sra_1.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417890_trmd_1.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
-trimmomatic PE -phred33 -basein /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/SRR6417890.sra_2.fastq.gz -baseout /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417890_trmd_2.fastq.gz ILLUMINACLIP:/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/TruSeq3-PE.fa:2:30:10 SLIDINGWINDOW:5:30 MINLEN:40 ;
 fastqc /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/*.fastq.gz -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC2  
 multiQC /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC2)
+```
+
+
+```{code results = FALSE, message=FALSE, warning=FALSE, echo=TRUE, kallisto_index.sge}
+#!/bin/bash
+# Use current working directory
+#$ -cwd
+#
+# Join stdout and stderr
+#$ -j y
+#
+# Run job through bash shell
+#$ -S /bin/bash
+#
+# You can edit the script since this line
+#
+# Your job name
+#$ -N EJ_kall_index
+
+# Send an email after the job has finished
+#$ -m e
+#$ -M eijorquera@uc.cl
+#
+# Line required if modules are to be used, source modules environment
+. /etc/profile.d/modules.sh
+#
+# loads kallisto module and downloads the latest reference transcriptome for homosapiens
+# uses kallisto to index the reference transcriptome
+(module load kallisto/0.45.0 ; 
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/latest_release/gencode.v39.transcripts.fa.gz ; 
+kallisto index -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/gencode.v39.transcripts.fa.gz)
+```
+
+```{code kallisto_quant.sge}
+#!/bin/bash
+# Use current working directory
+#$ -cwd
+#
+# Join stdout and stderr
+#$ -j y
+#
+# Run job through bash shell
+#$ -S /bin/bash
+#
+# You can edit the script since this line
+#
+# Your job name
+#$ -N EJ_kall_quant
+
+# Send an email after the job has finished
+#$ -m e
+#$ -M eijorquera@uc.cl
+#
+# Line required if modules are to be used, source modules environment
+. /etc/profile.d/modules.sh
+#
+# Loads kallisto module,
+# executes kallisto to make reads counts using the transcriptome as a reference
+(module load kallisto/0.45.0 ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto/SRR6417885 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417885_trmd_1_1P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417885_trmd_1_2P.fastq.gz ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto/SRR6417886 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417886_trmd_1_1P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417886_trmd_1_2P.fastq.gz ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto/SRR6417887 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417887_trmd_1_1P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417887_trmd_1_2P.fastq.gz ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto/SRR6417888 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417888_trmd_1_1P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417888_trmd_1_2P.fastq.gz ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto/SRR6417889 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417889_trmd_1_1P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417889_trmd_1_2P.fastq.gz ; 
+kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto/SRR6417890 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417890_trmd_1_1P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417890_trmd_1_2P.fastq.gz)
+```
+
+screen -S txi
+qlogin
+R
+
+```{r}
+getwd()
+setwd("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto")
+
+library(tximport)
+library(tidyverse) 
+
+files <- file.path("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto",list.dirs(dir(".")),"abundance.h5") # abundance files paths
+names(files) <- str_extract(files,"SRR\\d+") # so that tximport identifies them
+files
+	
+# Load table with trx id and gene id correspondence
+tx2gene <- read.csv("/mnt/Timina/bioinfoII/rnaseq/resources/gencode/gencode.v38.basic.pc.transcripts.enstid_ensgid-nover.csv",stringsAsFactors = F)
+
+# Load table with trx id and gene name correspondence
+tx2genename <- read.csv("/mnt/Timina/bioinfoII/rnaseq/resources/gencode/gencode.v38.basic.pc.transcripts.enstid_genename-nover.csv",stringsAsFactors = F)
+
+# Run tximport
+# tx2gene links transcript IDs to gene IDs for summarization
+txi.kallisto <- tximport(files, type = "kallisto", tx2gene = tx2gene, ignoreAfterBar=TRUE, ignoreTxVersion=TRUE)
+txi.kallisto.name <- tximport(files, type = "kallisto", tx2gene = tx2genename, ignoreAfterBar=TRUE, ignoreTxVersion=TRUE)
+
+names(txi.kallisto)
+head(txi.kallisto$counts)
+
+samples <- read.csv("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/samples.csv",stringsAsFactors = F, header = TRUE) # obtained parsing file on SRA Run Selector 
+samples <- column_to_rownames(samples, var = "sample")
+samples
+
+library(DESeq2)
+dds <- DESeqDataSetFromTximport(txi.kallisto,
+                                   colData = samples,
+                                   design = ~ genotype) # + si hay vars en condiciones
+
+dds
+
+# Prefiltrado para quitar genes con cuentas bajas
+keep <- rowSums(counts(dds)) >= 6
+dds <- dds[keep, ]
+dds$condition <- factor(dds$condition, levels = c("untreated","Verafinib"))
+dds <- DESeq(dds)
+
+# use contrast= parameter if design formula has > 2 levels
+res <- results(dds)
+res
+
+summary(res) # if we consider a fraction of 10% false positives acceptable, we can consider all genes with an adjusted p value below 10% = 0.1 as significant
+
+res.05 <- results(dds, alpha = 0.05)
+table(res.05$padj < 0.05) # genes that rejected null hypothesis
+
+summary(res.05)
+
+resLFC1 <- results(dds, lfcThreshold=1)
+table(resLFC1$padj < 0.1)
+
+summary(resLFC1)
+
+resSig <- subset(res, padj < 0.1) # subset
+head(resSig[ order(resSig$log2FoldChange), ]) # more downregulated genes
+
+head(resSig[ order(resSig$log2FoldChange, decreasing = TRUE), ]) # genes more upregulated
+
+
+
+
+
+BiocManager::install("apeglm") ### won't run can't install the package
+library(apeglm) # good for shrinking the noisy LFC estimates while giving low bias LFC estimates for true large differences (Zhu, Ibrahim, and Love 2018)
+
+resultsNames(dds) # ver comparaciones
+resLFC <- lfcShrink(dds, coef="condition_Verafinib_vs_untreated", type="apeglm")
+resLFC
+
+# Generar MAplot
+# definir dir donde vamos a guardar plots (ya creados)
+outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
+# generar plot y guadar
+# resultados completos
+png(file = paste0(outdir,"maplot01-res-noshrink.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+plotMA(res, ylim = c(-5, 5)) # funcion de DESeq
+dev.off()
+# resultados genes significativos
+png(file = paste0(outdir,"maplot01-resSig-noshrink.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+plotMA(resSig, ylim = c(-5, 5)) # funcion de DESeq
+dev.off()
+# resultados con lfcShrink
+png(file = paste0(outdir,"maplot01-resLFC-shrink.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+plotMA(resLFC, ylim = c(-5, 5)) # funcion de DESeq
+dev.off()
+# resaltar gen mas significatvo
+png(file = paste0(outdir,"maplot02-res-noshrink.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+plotMA(res, ylim = c(-5,5)) # lo mismo que antes
+topGene <- rownames(res)[which.min(res$padj)] # tomar gen con menos pval adjusted
+with(res[topGene, ], { # with evalua las expresiones dadas en el objeto dado
+  points(baseMean, log2FoldChange, col="dodgerblue", cex=2, lwd=2) # le damos las coordenadas y especificaciones de estilo
+  text(baseMean, log2FoldChange, topGene, pos=2, col="dodgerblue") # coordenadas y estilo
+})
+dev.off()
+
+
+
+
+
+
+# Volcano plot
+
+library(ggplot2) # cargamos librería
+outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
+png(file = paste0(outdir,"volcano01-res.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+# The basic scatter plot: x is "log2FoldChange", y is "pvalue"
+ggplot(data=as.data.frame(res), aes(x=log2FoldChange, y=pvalue)) +
+  geom_point() # scatter plot
+dev.off()
+
+png(file = paste0(outdir,"volcano02-res.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+ggplot(data=as.data.frame(res), aes(x=log2FoldChange, y=-log10(pvalue))) +
+  geom_point() # scatter plot
+dev.off()
+
+png(file = paste0(outdir,"volcano03-res.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+ggplot(data=as.data.frame(res), aes(x=log2FoldChange, y=-log10(pvalue))) +
+  geom_point() + # scatter plot
+  theme_minimal() + # tema de fondo
+  geom_vline(xintercept=c(-0.6, 0.6), col="red") + # vertical lines for log2FoldChange thresholds
+  geom_hline(yintercept=-log10(0.05), col="red") + # horizontal line for the p-value threshold
+  xlim(-15,15)
+dev.off()
+
+# Add a column to the data frame to specify if they are UP- or DOWN- regulated (log2FoldChange respectively positive or negative)
+de <- as.data.frame(res)
+# add a column of NAs
+de$diffexpressed <- "NO"
+# if log2Foldchange > 0.6 and pvalue < 0.05, set as "UP" 
+de$diffexpressed[de$log2FoldChange > 0.6 & de$pvalue < 0.05] <- "UP"
+# if log2Foldchange < -0.6 and pvalue < 0.05, set as "DOWN"
+de$diffexpressed[de$log2FoldChange < -0.6 & de$pvalue < 0.05] <- "DOWN"
+png(file = paste0(outdir,"volcano04-res.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+ggplot(data=de, aes(x=log2FoldChange, y=-log10(pvalue), col=diffexpressed)) + # cambiamos col param de aes
+  geom_point() + theme_minimal() + 
+  geom_vline(xintercept=c(-0.6, 0.6), col="red") +
+  geom_hline(yintercept=-log10(0.05), col="red") +
+  xlim(-15,15)
+dev.off()
+
+library(ggrepel) # libreria que evita el overlap de texto en labels
+# Create a new column "names" to de, that will contain the name of a subset if genes differentially expressed (NA in case they are not)
+de$names <- NA
+# filter for a subset of interesting genes
+filter <- which(de$diffexpressed != "NO" & de$padj < 0.05 & (de$log2FoldChange >= 9 | de$log2FoldChange <= -9))
+de$names[filter] <- rownames(de)[filter]
+# Generar y guardara plot
+png(file = paste0(outdir,"volcano05-res.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+ggplot(data=de, aes(x=log2FoldChange, y=-log10(pvalue), col=diffexpressed, label=names)) +
+    geom_point() +
+    scale_color_manual(values=c("blue", "black", "red")) + # cambiar colores de puntos
+    theme_minimal() +
+    geom_text_repel() +
+    xlim(-15,15)
+dev.off()
+
+
+# GO enrichment
+
+library(gprofiler2)
+
+# subset results for genes of interest
+resSig <- subset(res, padj < 0.1 & log2FoldChange > 1) # subset
+resSig <- resSig[ order(resSig$log2FoldChange, decreasing = TRUE), ]
+# define gene lists
+DEG <- rownames(resSig)
+#genes_universe <-
+# enrichment analysis
+gostres = gost(query = DEG, organism = "hsapiens", significant = T, 
+               correction_method = "fdr", domain_scope = "annotated", custom_bg = NULL, ordered_query = TRUE)
+names(gostres)
+attributes(gostres$meta)
+head(gostres$result)
+
+library(forcats)
+outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
+go <- as.data.frame(gostres$result)
+png(file = paste0(outdir,"gost01-resSig.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+# Reorder following the value of another column:
+go %>% 
+  arrange(p_value) %>% # order de acuerdo a valor incremental de pvalues
+  select(term_name,p_value) %>%  # seleccionar cols de df
+  dplyr::slice(1:20) %>% # tomar las primeas 20 filas
+  mutate(go = fct_reorder(term_name, p_value)) %>%
+  ggplot( aes(x=go, y=p_value)) + 
+    geom_bar(stat="identity", fill="#3A68AE", alpha=.6, width=.4) +
+    coord_flip() +
+    labs(x = "", y = "Adjusted P-value") +
+    theme_bw(base_size = 20)
+dev.off()
+
 ```
