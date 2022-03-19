@@ -1,0 +1,7 @@
+Module	Section	Sample Name	Source
+FastQC	all_sections	SRR6417889	/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC1/SRR6417889.sra_1_fastqc.zip
+FastQC	all_sections	SRR6417888	/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC1/SRR6417888.sra_1_fastqc.zip
+FastQC	all_sections	SRR6417890	/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC1/SRR6417890.sra_1_fastqc.zip
+FastQC	all_sections	SRR6417885	/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC1/SRR6417885.sra_1_fastqc.zip
+FastQC	all_sections	SRR6417887	/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC1/SRR6417887.sra_1_fastqc.zip
+FastQC	all_sections	SRR6417886	/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/QC1/SRR6417886.sra_1_fastqc.zip
