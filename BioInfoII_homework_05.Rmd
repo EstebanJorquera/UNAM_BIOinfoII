@@ -27,16 +27,12 @@ if (!requireNamespace("tidyverse", quietly = TRUE))       install.packages("tidy
 if (!requireNamespace("dplyr", quietly = TRUE))           install.packages("dplyr")
 if (!requireNamespace("tidyr", quietly = TRUE))           install.packages("tidyr")
 if (!requireNamespace("ggplot2", quietly = TRUE))         install.packages("ggplot2")
-if (!requireNamespace("wordcloud", quietly = TRUE))       install.packages("wordcloud")
-if (!requireNamespace("RColorBrewer", quietly = TRUE))    install.packages("RColorBrewer")
 
 # Libraries
 library(tidyverse)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(wordcloud)
-library(RColorBrewer)
 
 BiocManager::install(version = "3.13")
 packages = c("DESeq2", "tximport")
@@ -120,7 +116,7 @@ wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/latest_release/ge
 kallisto index -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/gencode.v39.transcripts.fa.gz)
 ```
 
-```{code kallisto_quant.sge}
+```{code results = FALSE, message=FALSE, warning=FALSE, echo=TRUE, kallisto_quant.sge}
 #!/bin/bash
 # Use current working directory
 #$ -cwd
@@ -154,122 +150,140 @@ kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_k
 kallisto quant -i /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/index_kallisto_gencode-h39 -o /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto/SRR6417890 /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417890_trmd_1_1P.fastq.gz /mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/SRR6417890_trmd_1_2P.fastq.gz)
 ```
 
+
+# Run this to enter an R session in screen mode 
+
 screen -S txi
 qlogin
 R
 
-```{r}
+```{r results = FALSE, message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
+
+## Data loading
+
+# gets the current work directory
 getwd()
+# sets the current work directory to kallisto's output folder
 setwd("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto")
 
+# imports the required libraries
 library(tximport)
 library(tidyverse) 
 
-files <- file.path("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto",list.dirs(dir(".")),"abundance.h5") # abundance files paths
-names(files) <- str_extract(files,"SRR\\d+") # so that tximport identifies them
+
+# kallisto pseudo alignment result counts
+files <- file.path("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/kallisto",list.dirs(dir(".")),"abundance.h5")
+names(files) <- str_extract(files,"SRR\\d+")
 files
 	
-# Load table with trx id and gene id correspondence
+# ensembl transcript_id - gene_id equivalence table, permits assigning the proper gene ID to each transcript, required since transcripts were aligned to transcriptome
 tx2gene <- read.csv("/mnt/Timina/bioinfoII/rnaseq/resources/gencode/gencode.v38.basic.pc.transcripts.enstid_ensgid-nover.csv",stringsAsFactors = F)
 
-# Load table with trx id and gene name correspondence
+# ensembl transcript_id - gene name/symbol equivalence table, permits assigning the proper gene name to each transcript
 tx2genename <- read.csv("/mnt/Timina/bioinfoII/rnaseq/resources/gencode/gencode.v38.basic.pc.transcripts.enstid_genename-nover.csv",stringsAsFactors = F)
 
-# Run tximport
-# tx2gene links transcript IDs to gene IDs for summarization
+# tx2gene asigns transcript IDs to gene IDs and gene names for summarization
 txi.kallisto <- tximport(files, type = "kallisto", tx2gene = tx2gene, ignoreAfterBar=TRUE, ignoreTxVersion=TRUE)
 txi.kallisto.name <- tximport(files, type = "kallisto", tx2gene = tx2genename, ignoreAfterBar=TRUE, ignoreTxVersion=TRUE)
 
+# displays the columns in the dataframe
 names(txi.kallisto)
+# shows the top (not ordered) of the dataframe
 head(txi.kallisto$counts)
 
-samples <- read.csv("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/samples.csv",stringsAsFactors = F, header = TRUE) # obtained parsing file on SRA Run Selector 
+# loads a csv table describing the samples used in the analysis, the table was manually made using the SRA Run Selector sample metadata 
+samples <- read.csv("/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/data/fastq/samples.csv",stringsAsFactors = F, header = TRUE)
 samples <- column_to_rownames(samples, var = "sample")
+# displays the sample dataframe
 samples
 
+
+
+## Differential expression analysis
+
+# imports the required libraries
 library(DESeq2)
 dds <- DESeqDataSetFromTximport(txi.kallisto,
                                    colData = samples,
-                                   design = ~ genotype) # + si hay vars en condiciones
-
+                                   design = ~ genotype)
 dds
 
-# Prefiltrado para quitar genes con cuentas bajas
+# Removes genes with low counts, by keeping only the rest
 keep <- rowSums(counts(dds)) >= 6
 dds <- dds[keep, ]
-dds$condition <- factor(dds$condition, levels = c("untreated","Verafinib"))
+dds$genotype <- factor(dds$genotype, levels = c("Wild_Type","FOXP1_KD"))
+
+# Runs DESeq for the filtered dataframe
 dds <- DESeq(dds)
 
-# use contrast= parameter if design formula has > 2 levels
+# saves and displays the results of DESeq to a results object; considers a 10% FDR
 res <- results(dds)
 res
+summary(res)
 
-summary(res) # if we consider a fraction of 10% false positives acceptable, we can consider all genes with an adjusted p value below 10% = 0.1 as significant
-
+# Similar as before but with an stricter 5% FDR
 res.05 <- results(dds, alpha = 0.05)
-table(res.05$padj < 0.05) # genes that rejected null hypothesis
-
+table(res.05$padj < 0.05)
 summary(res.05)
 
+# Gets genes that show a large (more than twice, less than half) fold change upon FOXP1 knockdown 
 resLFC1 <- results(dds, lfcThreshold=1)
 table(resLFC1$padj < 0.1)
-
 summary(resLFC1)
 
-resSig <- subset(res, padj < 0.1) # subset
-head(resSig[ order(resSig$log2FoldChange), ]) # more downregulated genes
+# Filters the 10% FDR results dataframe of p-adjusted values
+resSig <- subset(res, padj < 0.1)
+# Shows the more downregulated genes
+head(resSig[ order(resSig$log2FoldChange), ])
+# Shows the more upregulated genes
+head(resSig[ order(resSig$log2FoldChange, decreasing = TRUE), ])
 
-head(resSig[ order(resSig$log2FoldChange, decreasing = TRUE), ]) # genes more upregulated
 
-
-
-
-
-BiocManager::install("apeglm") ### won't run can't install the package
-library(apeglm) # good for shrinking the noisy LFC estimates while giving low bias LFC estimates for true large differences (Zhu, Ibrahim, and Love 2018)
-
-resultsNames(dds) # ver comparaciones
-resLFC <- lfcShrink(dds, coef="condition_Verafinib_vs_untreated", type="apeglm")
-resLFC
-
-# Generar MAplot
-# definir dir donde vamos a guardar plots (ya creados)
-outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
-# generar plot y guadar
-# resultados completos
-png(file = paste0(outdir,"maplot01-res-noshrink.png"),
-    width = 800, height = 800) # guardar el plot en formato png
-plotMA(res, ylim = c(-5, 5)) # funcion de DESeq
-dev.off()
-# resultados genes significativos
-png(file = paste0(outdir,"maplot01-resSig-noshrink.png"),
-    width = 800, height = 800) # guardar el plot en formato png
-plotMA(resSig, ylim = c(-5, 5)) # funcion de DESeq
-dev.off()
-# resultados con lfcShrink
-png(file = paste0(outdir,"maplot01-resLFC-shrink.png"),
-    width = 800, height = 800) # guardar el plot en formato png
-plotMA(resLFC, ylim = c(-5, 5)) # funcion de DESeq
-dev.off()
-# resaltar gen mas significatvo
-png(file = paste0(outdir,"maplot02-res-noshrink.png"),
-    width = 800, height = 800) # guardar el plot en formato png
-plotMA(res, ylim = c(-5,5)) # lo mismo que antes
-topGene <- rownames(res)[which.min(res$padj)] # tomar gen con menos pval adjusted
-with(res[topGene, ], { # with evalua las expresiones dadas en el objeto dado
-  points(baseMean, log2FoldChange, col="dodgerblue", cex=2, lwd=2) # le damos las coordenadas y especificaciones de estilo
-  text(baseMean, log2FoldChange, topGene, pos=2, col="dodgerblue") # coordenadas y estilo
-})
-dev.off()
-
+## MA plotting
+#
+# BiocManager::install("apeglm") ### won't run, can't install the package
+# library(apeglm) # good for shrinking the noisy LFC estimates while giving low bias LFC estimates for true large differences (Zhu, Ibrahim, and Love 2018)
+# 
+# resultsNames(dds)
+# resLFC <- lfcShrink(dds, coef="condition_Verafinib_vs_untreated", type="apeglm")
+# resLFC
+# 
+# # output folder for generated plots
+# outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
+# png(file = paste0(outdir,"maplot01-res-noshrink.png"),
+#     width = 800, height = 800) # guardar el plot en formato png
+# plotMA(res, ylim = c(-5, 5)) # funcion de DESeq
+# dev.off()
+# # resultados genes significativos
+# png(file = paste0(outdir,"maplot01-resSig-noshrink.png"),
+#     width = 800, height = 800) # guardar el plot en formato png
+# plotMA(resSig, ylim = c(-5, 5)) # funcion de DESeq
+# dev.off()
+# # lfcShrink results
+# png(file = paste0(outdir,"maplot01-resLFC-shrink.png"),
+#     width = 800, height = 800) # guardar el plot en formato png
+# plotMA(resLFC, ylim = c(-5, 5)) # funcion de DESeq
+# dev.off()
+# # most significative genes highlightning 
+# png(file = paste0(outdir,"maplot02-res-noshrink.png"),
+#     width = 800, height = 800)
+# plotMA(res, ylim = c(-5,5))
+# # gene with the lowest p.adjusted value
+# topGene <- rownames(res)[which.min(res$padj)]
+# with(res[topGene, ], {
+#   points(baseMean, log2FoldChange, col="dodgerblue", cex=2, lwd=2)
+#   text(baseMean, log2FoldChange, topGene, pos=2, col="dodgerblue")
+# })
+# dev.off()
 
 
 
+## Volcano plotting
 
+# imports the required libraries
+library(ggplot2)
 
-# Volcano plot
-
-library(ggplot2) # cargamos librería
+# output folder for generated plots
 outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
 png(file = paste0(outdir,"volcano01-res.png"),
     width = 800, height = 800) # guardar el plot en formato png
@@ -311,35 +325,39 @@ ggplot(data=de, aes(x=log2FoldChange, y=-log10(pvalue), col=diffexpressed)) + # 
   xlim(-15,15)
 dev.off()
 
-library(ggrepel) # libreria que evita el overlap de texto en labels
+# this library avoids label text overlapping
+library(ggrepel) 
 # Create a new column "names" to de, that will contain the name of a subset if genes differentially expressed (NA in case they are not)
 de$names <- NA
 # filter for a subset of interesting genes
 filter <- which(de$diffexpressed != "NO" & de$padj < 0.05 & (de$log2FoldChange >= 9 | de$log2FoldChange <= -9))
 de$names[filter] <- rownames(de)[filter]
-# Generar y guardara plot
 png(file = paste0(outdir,"volcano05-res.png"),
-    width = 800, height = 800) # guardar el plot en formato png
+    width = 800, height = 800)
 ggplot(data=de, aes(x=log2FoldChange, y=-log10(pvalue), col=diffexpressed, label=names)) +
     geom_point() +
-    scale_color_manual(values=c("blue", "black", "red")) + # cambiar colores de puntos
+    scale_color_manual(values=c("blue", "black", "red")) + 
     theme_minimal() +
     geom_text_repel() +
     xlim(-15,15)
 dev.off()
 
 
-# GO enrichment
+## GO enrichment
 
+# imports the required libraries
 library(gprofiler2)
 
+
+## 1st image
 # subset results for genes of interest
-resSig <- subset(res, padj < 0.1 & log2FoldChange > 1) # subset
+resSig <- subset(res, padj < 0.1 & log2FoldChange > 1)
 resSig <- resSig[ order(resSig$log2FoldChange, decreasing = TRUE), ]
 # define gene lists
-DEG <- rownames(resSig)
-#genes_universe <-
-# enrichment analysis
+DEG <- rownames(resSig) # genes that passed the previous significance test
+genes_universe <- rownames(res) # all genes with counts
+
+# enrichment analysis, this one does not consider a background
 gostres = gost(query = DEG, organism = "hsapiens", significant = T, 
                correction_method = "fdr", domain_scope = "annotated", custom_bg = NULL, ordered_query = TRUE)
 names(gostres)
@@ -350,12 +368,12 @@ library(forcats)
 outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
 go <- as.data.frame(gostres$result)
 png(file = paste0(outdir,"gost01-resSig.png"),
-    width = 800, height = 800) # guardar el plot en formato png
+    width = 800, height = 800)
 # Reorder following the value of another column:
 go %>% 
-  arrange(p_value) %>% # order de acuerdo a valor incremental de pvalues
-  select(term_name,p_value) %>%  # seleccionar cols de df
-  dplyr::slice(1:20) %>% # tomar las primeas 20 filas
+  arrange(p_value) %>% # incremental de p.value ordering
+  select(term_name,p_value) %>%  # df column selection
+  dplyr::slice(1:20) %>% # top 20 rows
   mutate(go = fct_reorder(term_name, p_value)) %>%
   ggplot( aes(x=go, y=p_value)) + 
     geom_bar(stat="identity", fill="#3A68AE", alpha=.6, width=.4) +
@@ -364,4 +382,85 @@ go %>%
     theme_bw(base_size = 20)
 dev.off()
 
+
+## 2nd image; note we are overwriting some of the previous objects... so re-run the whole chunk
+# subset results for genes of interest
+resSig <- subset(res, padj < 0.1 & log2FoldChange > 1) # subset
+resSig <- resSig[ order(resSig$log2FoldChange, decreasing = TRUE), ]
+# define gene lists
+DEG <- rownames(resSig)
+genes_universe <- rownames(res)
+
+# enrichment analysis, this one does consider a background
+gostres = gost(query = DEG, organism = "hsapiens", significant = T, 
+               correction_method = "fdr", domain_scope = "custom", 
+               custom_bg = genes_universe, ordered_query = TRUE)
+names(gostres)
+attributes(gostres$meta)
+head(gostres$result)
+
+library(forcats)
+outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
+go <- as.data.frame(gostres$result)
+png(file = paste0(outdir,"gost02-resSig.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+# Reorder following the value of another column:
+go %>% 
+  arrange(p_value) %>% # incremental de p.value ordering
+  select(term_name,p_value) %>%  # df column selection
+  dplyr::slice(1:20) %>% # top 20 rows
+  mutate(go = fct_reorder(term_name, p_value)) %>%
+  ggplot( aes(x=go, y=p_value)) + 
+    geom_bar(stat="identity", fill="#3A68AE", alpha=.6, width=.4) +
+    coord_flip() +
+    labs(x = "", y = "Adjusted P-value") +
+    theme_bw(base_size = 20)
+dev.off()
+
+
+## 3rd image; note we are overwriting some of the previous objects... so re-run the whole chunk
+# subset results for genes of interest
+resSig <- subset(res, padj < 0.1 & log2FoldChange < -1) # subset
+resSig <- resSig[ order(resSig$log2FoldChange, decreasing = FALSE), ] 
+# define gene lists
+DEG <- rownames(resSig)
+genes_universe <- rownames(res)
+
+# enrichment analysis, this one does consider a background and it's in the reverse order (considers only negative p value genes)
+gostres = gost(query = DEG, organism = "hsapiens", significant = T, 
+               correction_method = "fdr", domain_scope = "custom", 
+               custom_bg = genes_universe, ordered_query = TRUE)
+names(gostres)
+attributes(gostres$meta)
+head(gostres$result)
+
+library(forcats)
+outdir = "/mnt/Citosina/amedina/ejorquera/BioInfoII/Tarea_5/out/plots/"
+go <- as.data.frame(gostres$result)
+png(file = paste0(outdir,"gost02-resSig.png"),
+    width = 800, height = 800) # guardar el plot en formato png
+# Reorder following the value of another column:
+go %>% 
+  arrange(-p_value) %>% # incremental de p.value ordering
+  select(term_name,p_value) %>%  # df column selection
+  dplyr::slice(1:20) %>% # top 20 rows
+  mutate(go = fct_reorder(term_name, -p_value)) %>%
+  ggplot( aes(x=go, y=p_value)) + 
+    geom_bar(stat="identity", fill="#3A68AE", alpha=.6, width=.4) +
+    coord_flip() +
+    labs(x = "", y = "Adjusted P-value") +
+    theme_bw(base_size = 20)
+dev.off()
+
 ```
+
+```{r echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics('./homework_05/plots/gost02-resSig.png')
+```
+Second result generated from the gene ontology analysis of the FOXP1 differential gene expression RNA-seq data. In this image we observe the categories enriched upon FOXP1 knockdown, or in other words the genes that are significantly upregulated (log 2 fold change > 1) when this transcription factor is absent in the A549 lung carcinoma cell line. Interestingly, we observe that gene ontology category enrichment indicates that genes related to 3 proteins complexes are being upregulated in response to the loss of FOXp1, one of these, the KCTD12-GNB1-GNG2 complex might be of special interest considering that, according to Sheng et al, 2019, one of the highlighted proteins found to be upregulated in FOXP1 KD cells was another member of the family, GNG7. Similarly, the GM-CSF complex is also upregulated, this complex acts as a cytokine receptor, which is concordant with Sheng's results, where their group found that loss of FOXP1 causes an overall increase in the expression of chemokine signalling genes which results in increased proliferation of the lung adenocarcinoma cells, suggesting that FOXP1 acts as a tumor suppressor gene.
+
+```{r echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics('./homework_05/plots/gost03-resSig.png')
+```
+We generated a third gene ontology analysis were we selected the genes that were significantly downregulated (log 2 fold change < -1), when the transcription factor FOXP1 is lost, or in other words, the genes that were upregulated by FOXP1 in the wild type condition, interestingly in this case we observe that the gene ontology enriched in wild type conditions correspond to other transcription factors, this suggests to us that FOXP1 might regulate other transcription factors, and perhaps act as a master regulator in the A549 cell line.
+
